@@ -30,7 +30,7 @@ module List.Nonempty exposing
 
 # Lists
 
-@docs fromList, toList
+@docs fromList, toList, maybeToList
 
 
 # Transform
@@ -181,6 +181,27 @@ toList ( a, b ) =
     a :: b
 
 
+{-| Convert Maybe ListNonempty to a list
+
+    Just ( fromPair 0 [ 1, 2, 3 ] )
+        |> maybeToList
+        == [ 0, 1, 2, 3 ]
+
+    Nothing
+        |> maybeToList
+        == []
+
+-}
+maybeToList : Maybe ( ListNonempty a ) -> List a
+maybeToList lst =
+    case lst of
+        Just lst_ ->
+            toList lst_
+
+        Nothing ->
+            []
+
+
 {-| Append a value to become the new last element.
 
     append 4 (fromPair 1 [ 2, 3 ])
@@ -285,7 +306,7 @@ foldl f start elems =
 
 {-| Equivalent to `List.Extra.foldl1`
 
-    fromPair 1 [ 2, 3 ] |> foldl (+) 0 == 6
+    fromPair 1 [ 2, 3 ] |> foldl1 (+) == 6
 
 -}
 foldl1 : (a -> a -> a) -> ListNonempty a -> a
@@ -305,7 +326,7 @@ foldr f start elems =
 
 {-| Equivalent to `List.Extra.foldr1`
 
-    fromPair 1 [ 2, 3 ] |> foldr (+) 0 == 6
+    fromPair 1 [ 2, 3 ] |> foldr1 (+) == 6
 
 -}
 foldr1 : (a -> a -> a) -> ListNonempty a -> a
